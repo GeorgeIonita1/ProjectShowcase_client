@@ -42,16 +42,20 @@ const headers = {
     'Content-Type': 'application/json',
 }
 
-export function fetcher(modalData, event) {
+export function fetcher(modalData, values) {
     let body = {};
     let method, URL;
 
+
     if (modalData.requestType === createType || modalData.requestType === editType) {
-        for (let item of event.target) {
-            if (item.name && item.name !== 'isVisible') body[item.name] = item.value;
-            if (item.name === 'isVisible') body.isVisible = item.checked;
-        }
+        // for (let item of event.target) {
+        //     if (item.name && item.name !== 'isVisible') body[item.name] = item.value;
+        //     if (item.name === 'isVisible') body.isVisible = item.checked;
+        // }
+        body = values;
     }
+
+    console.log(values)
 
     switch (modalData.requestType) {
         case createType: {
@@ -76,10 +80,10 @@ export function fetcher(modalData, event) {
             break;
         }
         case imageUploadType: {
-            if (event?.target?.files[0]) {
+            if (values?.target?.files[0]) {
                 URL = imageUploadURLType;
                 method = POSTType;
-                const myFile = event.target.files[0];
+                const myFile = values.target.files[0];
                 const formData = new FormData();
                 formData.append('file', myFile);
                 body = formData;

@@ -24,15 +24,15 @@ export default function ProjectEditForm({onSubmitForm}) {
             redirrect: modalData?.data?.redirrect,
         },
         onSubmit: values => {
-            console.log(values)
+            onSubmitForm({ ...values, imgURL: imageUrl })
         }
     })
 
     console.log(formik)
 
-    const handleImageUpload = async e => {
+    const handleImageUpload = async event => {
         setIsLoading(true);
-        const response = await fetcher(imageUploadRequestTypeObject, e);
+        const response = await fetcher(imageUploadRequestTypeObject, event);
 
         if (!response.ok) console.log(response) // check
         if (response.ok) {
