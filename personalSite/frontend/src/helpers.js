@@ -48,14 +48,8 @@ export function fetcher(modalData, values) {
 
 
     if (modalData.requestType === createType || modalData.requestType === editType) {
-        // for (let item of event.target) {
-        //     if (item.name && item.name !== 'isVisible') body[item.name] = item.value;
-        //     if (item.name === 'isVisible') body.isVisible = item.checked;
-        // }
         body = values;
     }
-
-    console.log(values)
 
     switch (modalData.requestType) {
         case createType: {
