@@ -1,6 +1,7 @@
 import styles from './Modal.module.scss';
 import closeIcon from '../../assets/icons/close.svg'
 
+// eslint-disable-next-line react/prop-types
 const Modal = ({ isOpen, apiResponseStatus, children, onToggleModal }) => {
     return isOpen && (
         <div className={styles.modal}>
