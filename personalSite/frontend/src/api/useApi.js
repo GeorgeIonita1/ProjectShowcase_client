@@ -1,25 +1,31 @@
+// todo: call setApiResponseStatus and handleTimerModalClose in a reusable function
 import { useEffect, useState } from "react";
 
-import { createType, deleteType, editType, fetcher, baseURL, visibilityType } from '../helpers';
+import { createType, deleteType, editType, visibilityType } from '../helpers';
+import ApiServices from "../services/ApiServices";
 
 export default function useApi(modalData, handleAutoModalClose) {
     const [projectsAPI, setProjectsAPI] = useState(null);
     const [apiResponseStatus, setApiResponseStatus] = useState(false);
     
     const handleOnSubmitForm = async values => {
-        
-        const response = await fetcher(modalData, values);
-        if (!response.ok) setApiResponseStatus(404);
-
-        if (response.ok) {
-            const responseJSON = await response.json();
-
-            switch (modalData.requestType) {
-                case createType: {
+        switch (modalData.requestType) {
+            case createType: {
+                const response = await ApiServices.createProject(values);
+                
+                if (response.ok) {
+                    const responseJSON = await response.json();
                     setProjectsAPI([...projectsAPI, responseJSON]);
-                    break;
-                }
-                case editType: {
+                    setApiResponseStatus(201);
+                    handleTimerModalClose();
+                } else setApiResponseStatus(404);
+                break;
+            }
+            case editType: {
+                const response = await ApiServices.editProject(values, modalData.data.id);
+                
+                if (response.ok) {
+                    const responseJSON = await response.json();
                     const newList = projectsAPI.map(el => {
                         if (el.id === responseJSON.id) {
                             return { ...responseJSON }
@@ -28,14 +34,17 @@ export default function useApi(modalData, handleAutoModalClose) {
                         }
                     });
                     setProjectsAPI(newList);
-                    break;
-                }
-                case deleteType: {
-                    const newList = projectsAPI.filter(e => e.id !== responseJSON.id);
-                    setProjectsAPI(newList);
-                    break;
-                }
-                case visibilityType: {
+                    setApiResponseStatus(201);
+                    handleTimerModalClose();
+                    
+                } else setApiResponseStatus(404);
+                break;
+            }
+            case visibilityType: {
+                const response = await ApiServices.visibilityProjectChange(modalData.data.isVisible, modalData.data.id);
+                
+                if (response.ok) {
+                    const responseJSON = await response.json();
                     const newList = projectsAPI.map(el => {
                         if (el.id === responseJSON.id) {
                             return { ...el, isVisible: !el.isVisible }
@@ -44,11 +53,23 @@ export default function useApi(modalData, handleAutoModalClose) {
                         }
                     })
                     setProjectsAPI(newList);
-                    break;
+                    setApiResponseStatus(201);
+                    handleTimerModalClose();
                 }
+                break;
             }
-            setApiResponseStatus(201);
-            handleTimerModalClose();
+            case deleteType: {
+                const response = await ApiServices.deleteProject(modalData.id);
+                
+                if (response.ok) {
+                    const responseJSON = await response.json();
+                    const newList = projectsAPI.filter(e => e.id !== responseJSON.id);
+                    setProjectsAPI(newList);
+                    setApiResponseStatus(201);
+                    handleTimerModalClose();
+                }
+                break;
+            }
         }
     }
     
@@ -64,10 +85,14 @@ export default function useApi(modalData, handleAutoModalClose) {
     }
 
     useEffect(() => {
-        fetch(baseURL)
-            .then(response => response.json())
-            .then(response => setProjectsAPI(response))
-            .catch(err => console.log(err))
+        (async () => {
+            const response = await ApiServices.getProjects();
+
+            if (response.ok) {
+                const responseJSON = await response.json();
+                setProjectsAPI(responseJSON);
+            }
+        })()
     }, [])
 
     return { projectsAPI, apiResponseStatus, handleOnSubmitForm, handleModalStatusOff }

@@ -1,4 +1,5 @@
-// TODO: more efficient way to render image and imageURL:12/13
+// TODO: more efficient way to render image and imageURL
+// todo: handle image upload error
 // delete unused images from storage (send form data)
 
 
@@ -7,7 +8,8 @@ import { useFormik } from "formik";
 
 import styles from './projectEditForm.module.scss';
 import { ModalDataContext, ModalDataDispatchContext } from "../../contexts/ModalDataContext";
-import { deleteType, fetcher, imageUploadRequestTypeObject, visibilityType } from '../../helpers';
+import { deleteType, visibilityType } from '../../helpers';
+import ApiServices from "../../services/ApiServices";
 
 // eslint-disable-next-line react/prop-types
 export default function ProjectEditForm({onSubmitForm}) {
@@ -28,13 +30,10 @@ export default function ProjectEditForm({onSubmitForm}) {
         }
     })
 
-    console.log(formik)
-
     const handleImageUpload = async event => {
         setIsLoading(true);
-        const response = await fetcher(imageUploadRequestTypeObject, event);
+        const response = await ApiServices.uploadImage(event);
 
-        if (!response.ok) console.log(response) // check
         if (response.ok) {
             const responseJson = await response.json();
 

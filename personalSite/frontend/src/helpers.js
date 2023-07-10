@@ -4,14 +4,16 @@ export const projectsDummy = [
         description: 'Numarul 1',
         imgURL: 'https://i.ytimg.com/vi/XelWZr_B7E4/maxresdefault.jpg',
         name: 'Nicolae Guta',
-        redirrect: 'https://google.com'
+        redirrect: 'https://google.com',
+        isVisible: true,
     },
     {
         id: 'gdfi8jlfdfdf58g',
         description: 'E cel mai tare',
         imgURL: 'https://i.ytimg.com/vi/XelWZr_B7E4/maxresdefault.jpg',
         name: 'Adrian minunt',
-        redirrect: 'https://google.com'
+        redirrect: 'https://google.com',
+        isVisible: false,
     }
 ];
 
@@ -25,77 +27,18 @@ export const createType = 'create';
 export const editType = 'edit';
 export const visibilityType = 'visibility';
 export const deleteType = 'delete';
+export const baseURL = import.meta.env.MODE === 'production' ? 'https://showcase-projects-cccc1f78f6bc.herokuapp.com/projects/' : 'http://localhost:3333/projects/';
 const imageUploadType = 'imageUpload';
-// export const baseURL = import.meta.env.MODE === 'production' ? 'https://showcase-projects-cccc1f78f6bc.herokuapp.com/projects/' : 'http://localhost:3333/projects/';
-export const baseURL = 'https://showcase-projects-cccc1f78f6bc.herokuapp.com/projects/';
 export const imageUploadRequestTypeObject = { requestType: imageUploadType };
-const createURLType = baseURL + 'create';
-const visibilityURLType = baseURL + 'visibility/';
-const imageUploadURLType = baseURL +'imageupload';
-const deleteURLType = baseURL + 'delete/';
-const POSTType = 'POST';
-const PUTType = 'PUT';
-const DELETEType = 'DELETE';
+export const createURLType = baseURL + 'create';
+export const visibilityURLType = baseURL + 'visibility/';
+export const imageUploadURLType = baseURL +'imageupload';
+export const deleteURLType = baseURL + 'delete/';
+export const POSTType = 'POST';
+export const PUTType = 'PUT';
+export const DELETEType = 'DELETE';
 
-const headers = {
+export const headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
-}
-
-export function fetcher(modalData, values) {
-    let body = {};
-    let method, URL;
-
-
-    if (modalData.requestType === createType || modalData.requestType === editType) {
-        body = values;
-    }
-
-    switch (modalData.requestType) {
-        case createType: {
-            method = POSTType;
-            URL = createURLType;
-            break;
-        }
-        case editType: {
-            method = PUTType;
-            URL = baseURL + modalData.data.id;
-            break;
-        }
-        case deleteType: {
-            method = DELETEType;
-            URL = deleteURLType + modalData.id;
-            break;
-        }
-        case visibilityType: {
-            method = PUTType;
-            URL = visibilityURLType + modalData.data.id;
-            body = { visibility: modalData.data.isVisible }
-            break;
-        }
-        case imageUploadType: {
-            if (values?.target?.files[0]) {
-                URL = imageUploadURLType;
-                method = POSTType;
-                const myFile = values.target.files[0];
-                const formData = new FormData();
-                formData.append('file', myFile);
-                body = formData;
-            }
-            break;
-        }
-    }
-
-    if (modalData.requestType === imageUploadType) {
-        return fetch(URL, {
-            method,
-            body,
-        })
-    } else {
-        return fetch(URL, {
-            method,
-            headers,
-            body: JSON.stringify(body),
-        })
-    }
 }
