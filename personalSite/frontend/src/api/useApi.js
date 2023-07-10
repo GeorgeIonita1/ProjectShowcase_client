@@ -6,10 +6,9 @@ export default function useApi(modalData, handleAutoModalClose) {
     const [projectsAPI, setProjectsAPI] = useState(null);
     const [apiResponseStatus, setApiResponseStatus] = useState(false);
     
-    const handleOnSubmitForm = async e => {
-        if (e) e.preventDefault();
+    const handleOnSubmitForm = async values => {
         
-        const response = await fetcher(modalData, e);
+        const response = await fetcher(modalData, values);
         if (!response.ok) setApiResponseStatus(404);
 
         if (response.ok) {

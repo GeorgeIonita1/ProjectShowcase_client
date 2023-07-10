@@ -1,21 +1,38 @@
 // TODO: more efficient way to render image and imageURL:12/13
 // delete unused images from storage (send form data)
 
-import styles from './projectEditForm.module.scss';
 
 import { useContext, useState } from "react";
+import { useFormik } from "formik";
+
+import styles from './projectEditForm.module.scss';
 import { ModalDataContext, ModalDataDispatchContext } from "../../contexts/ModalDataContext";
 import { deleteType, fetcher, imageUploadRequestTypeObject, visibilityType } from '../../helpers';
 
+// eslint-disable-next-line react/prop-types
 export default function ProjectEditForm({onSubmitForm}) {
     const modalData = useContext(ModalDataContext);
     const dispatch = useContext(ModalDataDispatchContext);
     const [imageUrl, setImageUrl] = useState(modalData?.data?.imgURL);
     const [loading, setIsLoading] = useState(false);
 
-    const handleImageUpload = async e => {
+    const formik =  useFormik({
+        initialValues: {
+            name: modalData?.data?.name,
+            isVisible: modalData?.data?.isVisible,
+            description: modalData?.data?.description,
+            redirrect: modalData?.data?.redirrect,
+        },
+        onSubmit: values => {
+            onSubmitForm({ ...values, imgURL: imageUrl })
+        }
+    })
+
+    console.log(formik)
+
+    const handleImageUpload = async event => {
         setIsLoading(true);
-        const response = await fetcher(imageUploadRequestTypeObject, e);
+        const response = await fetcher(imageUploadRequestTypeObject, event);
 
         if (!response.ok) console.log(response) // check
         if (response.ok) {
@@ -37,13 +54,14 @@ export default function ProjectEditForm({onSubmitForm}) {
             <button type='button' onClick={onSubmitForm}>yes</button>
         </div>
     ) : (
-        <form onSubmit={onSubmitForm} className={styles.form}>
+        <form onSubmit={formik.handleSubmit} className={styles.form}>
             <div className='input-container'>
                 <span>Title</span>
                 <input
                     type='text'
                     name='name'
-                    defaultValue={modalData?.data?.name}
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
                     required
                     />
             </div>
@@ -52,7 +70,8 @@ export default function ProjectEditForm({onSubmitForm}) {
                 <input
                     type='checkbox'
                     name='isVisible'
-                    defaultChecked={modalData?.data?.isVisible || false}
+                    value={formik.values.isVisible}
+                    onChange={formik.handleChange}
                     />
             </label>
             <div className='input-container'>
@@ -60,7 +79,8 @@ export default function ProjectEditForm({onSubmitForm}) {
                 <input
                     type='textarea'
                     name='description'
-                    defaultValue={modalData?.data?.description}
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
                     required
                     />
             </div>
@@ -80,10 +100,11 @@ export default function ProjectEditForm({onSubmitForm}) {
                 <div className={styles.formImage}>
                     <input
                         type='file'
+                        name="imgUpload"
                         onChange={handleImageUpload}
                     />
                     <div>
-                        <img src={modalData?.data?.imgURL} alt="" />
+                        <img src={modalData?.data?.imgURL} />
                     </div>
                 </div>
             </fieldset>
@@ -92,7 +113,8 @@ export default function ProjectEditForm({onSubmitForm}) {
                 <input
                     type='string'
                     name='redirrect'
-                    defaultValue={modalData?.data?.redirrect}
+                    value={formik.values.redirrect}
+                    onChange={formik.handleChange}
                     required
                     />
             </div>

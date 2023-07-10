@@ -26,7 +26,8 @@ export const editType = 'edit';
 export const visibilityType = 'visibility';
 export const deleteType = 'delete';
 const imageUploadType = 'imageUpload';
-export const baseURL = import.meta.env.MODE === 'production' ? 'https://showcase-projects-cccc1f78f6bc.herokuapp.com/projects/' : 'http://localhost:3333/projects/';
+// export const baseURL = import.meta.env.MODE === 'production' ? 'https://showcase-projects-cccc1f78f6bc.herokuapp.com/projects/' : 'http://localhost:3333/projects/';
+export const baseURL = 'https://showcase-projects-cccc1f78f6bc.herokuapp.com/projects/';
 export const imageUploadRequestTypeObject = { requestType: imageUploadType };
 const createURLType = baseURL + 'create';
 const visibilityURLType = baseURL + 'visibility/';
@@ -41,15 +42,13 @@ const headers = {
     'Content-Type': 'application/json',
 }
 
-export function fetcher(modalData, event) {
+export function fetcher(modalData, values) {
     let body = {};
     let method, URL;
 
+
     if (modalData.requestType === createType || modalData.requestType === editType) {
-        for (let item of event.target) {
-            if (item.name && item.name !== 'isVisible') body[item.name] = item.value;
-            if (item.name === 'isVisible') body.isVisible = item.checked;
-        }
+        body = values;
     }
 
     switch (modalData.requestType) {
@@ -75,10 +74,10 @@ export function fetcher(modalData, event) {
             break;
         }
         case imageUploadType: {
-            if (event?.target?.files[0]) {
+            if (values?.target?.files[0]) {
                 URL = imageUploadURLType;
                 method = POSTType;
-                const myFile = event.target.files[0];
+                const myFile = values.target.files[0];
                 const formData = new FormData();
                 formData.append('file', myFile);
                 body = formData;
