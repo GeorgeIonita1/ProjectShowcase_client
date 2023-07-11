@@ -10,6 +10,7 @@ import styles from './projectEditForm.module.scss';
 import { ModalDataContext, ModalDataDispatchContext } from "../../contexts/ModalDataContext";
 import { deleteType, visibilityType } from '../../helpers';
 import ApiServices from "../../services/ApiServices";
+import imageUploadIcon from '../../assets/icons/uploadImageIcon.svg';
 
 // eslint-disable-next-line react/prop-types
 export default function ProjectEditForm({onSubmitForm}) {
@@ -54,8 +55,8 @@ export default function ProjectEditForm({onSubmitForm}) {
         </div>
     ) : (
         <form onSubmit={formik.handleSubmit} className={styles.form}>
-            <div className='input-container'>
-                <span>Title</span>
+            <label>
+                Title
                 <input
                     type='text'
                     name='name'
@@ -63,18 +64,9 @@ export default function ProjectEditForm({onSubmitForm}) {
                     onChange={formik.handleChange}
                     required
                     />
-            </div>
-            <label>
-                Is Visible
-                <input
-                    type='checkbox'
-                    name='isVisible'
-                    value={formik.values.isVisible}
-                    onChange={formik.handleChange}
-                    />
             </label>
-            <div className='input-container'>
-                <span>Description</span>
+            <label>
+                Description
                 <input
                     type='textarea'
                     name='description'
@@ -82,33 +74,9 @@ export default function ProjectEditForm({onSubmitForm}) {
                     onChange={formik.handleChange}
                     required
                     />
-            </div>
-            <fieldset>
-                {loading && <h3 className={styles.formLoading}>Loading . . .</h3>}
-                <span>Image URL</span>
-                <div className='input-container'>
-                    <input
-                        type='string'
-                        name='imgURL'
-                        value={imageUrl}
-                        onChange={e => setImageUrl(e.target.value)}
-                        required
-                    />
-                </div>
-                <h3>or</h3>
-                <div className={styles.formImage}>
-                    <input
-                        type='file'
-                        name="imgUpload"
-                        onChange={handleImageUpload}
-                    />
-                    <div>
-                        <img src={modalData?.data?.imgURL} />
-                    </div>
-                </div>
-            </fieldset>
-            <div className='input-container'>
-                <span>Project URL</span>
+            </label>
+            <label>
+                Project URL
                 <input
                     type='string'
                     name='redirrect'
@@ -116,8 +84,46 @@ export default function ProjectEditForm({onSubmitForm}) {
                     onChange={formik.handleChange}
                     required
                     />
-            </div>
-            <br />
+            </label>
+            <fieldset>
+                {loading && <h3 className={styles.formLoading}>Loading . . .</h3>}
+                <label>
+                    Image URL:
+                    <input
+                        type='string'
+                        name='imgURL'
+                        value={imageUrl}
+                        onChange={e => setImageUrl(e.target.value)}
+                        required
+                    />
+                </label>
+                <h3>or</h3>
+                <div className={styles.formImage}>
+                    <input
+                        id="imgUpload"
+                        type='file'
+                        name="imgUpload"
+                        onChange={handleImageUpload}
+                        hidden
+                    />
+                    <label htmlFor="imgUpload">
+                        <img src={imageUploadIcon} />
+                        Upload a file
+                    </label>
+                    <div>
+                        {modalData?.data?.imgURL && <img src={modalData?.data?.imgURL} />}
+                    </div>
+                </div>
+            </fieldset>
+            <label className={styles.formCheckbox}>
+                Is Visible:
+                <input
+                    type='checkbox'
+                    name='isVisible'
+                    value={formik.values.isVisible}
+                    onChange={formik.handleChange}
+                    />
+            </label>
             <button type='submit'>Submit</button>
         </form>
     )

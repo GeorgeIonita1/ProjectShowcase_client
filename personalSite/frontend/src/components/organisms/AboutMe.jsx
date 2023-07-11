@@ -12,7 +12,6 @@ export default function AboutMe() {
                     Incidunt quasi eos accusamus nostrum! Non assumenda adipisci quae, culpa 
                     numquam tenetur consequuntur ex itaque magni a nobis, sunt ratione distinctio 
                     voluptate!</p>
-                    <span>Show More ...</span>
                 </div>
                 <div className={styles.aboutMeImage}>
                     <img src={portraitImg} alt="" />

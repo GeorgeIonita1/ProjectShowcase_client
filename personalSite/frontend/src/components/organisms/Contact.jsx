@@ -21,16 +21,16 @@ export default function Contact() {
                     </div>
                     <div className={styles.contactForm}>
                         <form>
-                            <div className='input-container'>
+                            <label className='input-container'>
                                 <input type="text" placeholder='Name' />
-                            </div>
-                            <div className='input-container'>
+                            </label>
+                            <label className='input-container'>
                                 <input type="text" placeholder='e-mail' />
-                            </div>
-                            <div className='input-container'>
+                            </label>
+                            <label className='input-container'>
                                 <textarea placeholder='Your Message' rows="1"></textarea>
-                            </div>
-                            <button>Submit</button>
+                            </label>
+                            <button type='button'>Submit</button>
                         </form>
                     </div>
                 </div>
