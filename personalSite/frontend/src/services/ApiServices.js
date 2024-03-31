@@ -5,17 +5,14 @@ class ApiServices {
         return fetch(baseURL);
     }
 
-    uploadImage(event) {
-        if (event?.target?.files[0]) {
-            const myFile = event.target.files[0];
-            const formData = new FormData();
-            formData.append('file', myFile);
+    uploadImage(blob) {
+        const formData = new FormData();
+        formData.append('file', blob);
 
-            return fetch(imageUploadURLType, {
-                method: POSTType,
-                body: formData,
-            })
-        }
+        return fetch(imageUploadURLType, {
+            method: POSTType,
+            body: formData,
+        })
     }
 
     createProject(values) {
@@ -25,7 +22,7 @@ class ApiServices {
             body: JSON.stringify(values)
         })
     }
-    
+
     editProject(values, id) {
         return fetch(baseURL + id, {
             method: PUTType,
@@ -33,14 +30,14 @@ class ApiServices {
             body: JSON.stringify(values)
         })
     }
-    
+
     visibilityProjectChange(visibility, id) {
         return fetch(visibilityURLType + id, {
             method: PUTType,
             body: { visibility }
         })
     }
-    
+
     deleteProject(id) {
         return fetch(deleteURLType + id, {
             method: DELETEType,
