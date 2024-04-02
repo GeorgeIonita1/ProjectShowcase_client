@@ -55,7 +55,7 @@ function App() {
             {editMode ? (
               <ProjectEditForm onSubmitForm={handleOnSubmitForm} />
             ) : (
-              <ProjectCard  onToggleModal={() => setIsModalOpen(!isModalOpen)} />
+              <ProjectCard onToggleModal={() => setIsModalOpen(!isModalOpen)} />
             )}
           </Modal>
         </ModalDataDispatchContext.Provider>

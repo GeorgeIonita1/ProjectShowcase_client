@@ -13,8 +13,11 @@ export function useCompressImage(modalData) {
     const [imageUrl, setImageUrl] = useState(modalData?.data?.imgURL);
     const [originalSize, setOriginalSize] = useState('');
     const [compressedSize, setCompressedSize] = useState('');
+    const [loading, setIsLoading] = useState(false);
 
     const handleCompressImage = e => {
+        setIsLoading(true);
+
         if (e?.target?.files[0]) {
             const file = e.target.files[0];
             const blobURL = URL.createObjectURL(file);
@@ -46,12 +49,14 @@ export function useCompressImage(modalData) {
 
                         setImageUrl(responseJson.url);
                     }
+                    setIsLoading(false);
                 })
             })
         }
+
     }
 
-    return { imageUrl, originalSize, compressedSize, setImageUrl, handleCompressImage }
+    return { imageUrl, originalSize, compressedSize, loading, setImageUrl, handleCompressImage }
 }
 
 function calculateSize(img, maxWidth, maxHeight) {

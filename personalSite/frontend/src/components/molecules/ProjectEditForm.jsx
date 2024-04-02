@@ -1,4 +1,3 @@
-// TODO: more efficient way to render image and imageURL
 // todo: handle image upload error
 // delete unused images from storage (send form data)
 
@@ -14,8 +13,7 @@ import { useCompressImage } from "../../hooks/useCompressImage";
 // eslint-disable-next-line react/prop-types
 export default function ProjectEditForm({ onSubmitForm }) {
     const modalData = useContext(ModalDataContext);
-    const [loading, setIsLoading] = useState(false);
-    const { imageUrl, originalSize, compressedSize, setImageUrl, handleCompressImage } = useCompressImage(modalData);
+    const { imageUrl, originalSize, compressedSize, loading, setImageUrl, handleCompressImage } = useCompressImage(modalData);
 
     const formik = useFormik({
         initialValues: {
@@ -30,9 +28,7 @@ export default function ProjectEditForm({ onSubmitForm }) {
     })
 
     const handleImageUpload = event => {
-        setIsLoading(true);
         handleCompressImage(event)
-        setIsLoading(false);
     }
 
     return (modalData.requestType === deleteType || modalData.requestType === visibilityType) ? (
