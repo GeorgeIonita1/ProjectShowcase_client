@@ -11,14 +11,11 @@ import { ModalDataContext } from "../../contexts/ModalDataContext";
 import { deleteType, visibilityType } from '../../helpers';
 import { useCompressImage } from "../../hooks/useCompressImage";
 
-const MAX_WIDTH = 600;
-const MAX_HEIGHT = 600;
-
 // eslint-disable-next-line react/prop-types
 export default function ProjectEditForm({ onSubmitForm }) {
     const modalData = useContext(ModalDataContext);
     const [loading, setIsLoading] = useState(false);
-    const { imageUrl, originalSize, compressedSize, setImageUrl, handleCompressImage } = useCompressImage();
+    const { imageUrl, originalSize, compressedSize, setImageUrl, handleCompressImage } = useCompressImage(modalData);
 
     const formik = useFormik({
         initialValues: {
